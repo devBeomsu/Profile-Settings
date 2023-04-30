@@ -350,7 +350,7 @@
 				DEVELOPMENT_TEAM = 7WULLR98GP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProfileSettings/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Portfolio;
+				INFOPLIST_KEY_CFBundleDisplayName = ProfileSettings;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -381,7 +381,7 @@
 				DEVELOPMENT_TEAM = 7WULLR98GP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProfileSettings/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Portfolio;
+				INFOPLIST_KEY_CFBundleDisplayName = ProfileSettings;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

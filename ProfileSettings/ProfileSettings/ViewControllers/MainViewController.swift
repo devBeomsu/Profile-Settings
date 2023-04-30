@@ -34,29 +34,25 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // UserDefaults를 사용하여 이전에 저장한 데이터를 불러오고, 각각의 데이터를 해당하는 레이블에 출력하는 코드
-        nicknameLabel.text = defaults.string(forKey: "nickname")
-        oneLineProfileLabel.text = defaults.string(forKey: "oneLineProfile")
-        aboutMeLabel.text = defaults.string(forKey: "aboutMe")
-        firstWebsiteLabel.text = defaults.string(forKey: "firstWebsite")
-        secondWebsiteLabel.text = defaults.string(forKey: "secondWebsite")
-        thirdWebsiteLabel.text = defaults.string(forKey: "thirdWebsite")
         
-        // MARK: 연결한 웹사이트가 있으면 Hidden 처리하지 않는 코드
-        if firstWebsiteLabel.text?.isEmpty == false &&
-            secondWebsiteLabel.text?.isEmpty == false &&
-            thirdWebsiteLabel.text?.isEmpty == false {
-            firstWebsiteView.isHidden = false
-            secondWebsiteView.isHidden = false
-            thirdWebsiteView.isHidden = false
-            
-            firstWebsiteLabel.underline()
-            secondWebsiteLabel.underline()
-            thirdWebsiteLabel.underline()
+        // UserDefault에서 데이터 불러오기
+        let savedData = (
+            nickname: defaults.string(forKey: "nickname") ?? "",
+            oneLineProfile: defaults.string(forKey: "oneLineProfile") ?? "",
+            aboutMe: defaults.string(forKey: "aboutMe") ?? "",
+            firstWebsite: defaults.string(forKey: "firstWebsite") ?? "",
+            secondWebsite: defaults.string(forKey: "secondWebsite") ?? "",
+            thirdWebsite: defaults.string(forKey: "thirdWebsite") ?? ""
+        )
+        // 불러온 데이터를 MainViewController의 UI에 업데이트
+        updateData(savedData: savedData)
+        
+        // WebsiteView들 중 텍스트가 있으면 hiddenWebsite 레이블 표시
+        if !firstWebsiteView.isHidden || !secondWebsiteView.isHidden || !thirdWebsiteView.isHidden {
+            hiddenWebsite.isHidden = false
+          // WebsiteView들 중 텍스트가 하나도 없으면 hiddenWebsite 레이블 숨김
         } else {
-            firstWebsiteView.isHidden = true
-            secondWebsiteView.isHidden = true
-            thirdWebsiteView.isHidden = true
+            hiddenWebsite.isHidden = true
         }
         
         // MARK: 웹사이트 링크에 탭 제스처 추가
@@ -119,23 +115,62 @@ class MainViewController: UIViewController {
     }
     
     // MARK: - 저장된 데이터를 업데이트하기 위한 함수
+    // 저장된 데이터가 있으면 받아와서 해당 레이블에 출력하고, 입력된 값도 저장
     func updateData(savedData: (
-        nickname: String,       // 저장된 닉네임 데이터
-        oneLineProfile: String, // 저장된 한 줄 프로필 데이터
-        aboutMe: String,        // 저장된 자기소개 데이터
-        firstWebsite: String,   // 저장된 첫 번째 웹사이트 링크 데이터
-        secondWebsite: String,  // 저장된 두 번째 웹사이트 링크 데이터
-        thirdWebsite: String    // 저장된 세 번째 웹사이트 링크 데이터
+        nickname: String,
+        oneLineProfile: String,
+        aboutMe: String,
+        firstWebsite: String,
+        secondWebsite: String,
+        thirdWebsite: String
     )?) {
-        // 저장된 데이터가 있다면
+        // 받아온 데이터가 있으면 레이블에 저장된 값 출력
         if let data = savedData {
-            // 레이블에 저장된 데이터를 업데이트
-            nicknameLabel.text = data.nickname             // 닉네임 레이블에 저장된 닉네임 데이터 업데이트
-            oneLineProfileLabel.text = data.oneLineProfile // 한 줄 소개 레이블에 저장된 한 줄 소개 데이터 업데이트
-            aboutMeLabel.text = data.aboutMe               // 자기 소개 레이블에 저장된 자기 소개 데이터 업데이트
+            nicknameLabel.text = data.nickname
+            oneLineProfileLabel.text = data.oneLineProfile
+            aboutMeLabel.text = data.aboutMe
+            
+            defaults.set(data.nickname, forKey: "nickname")             // 닉네임 데이터 저장
+            defaults.set(data.oneLineProfile, forKey: "oneLineProfile") // 한 줄 프로필 데이터 저장
+            defaults.set(data.aboutMe, forKey: "aboutMe")               // 자기소개 데이터 저장
+            
+            firstWebsiteView.isHidden = data.firstWebsite.isEmpty   // 첫 번째 웹사이트가 비어있다면 웹사이트 뷰 숨기기
+            secondWebsiteView.isHidden = data.secondWebsite.isEmpty // 두 번째 웹사이트가 비어있다면 웹사이트 뷰 숨기기
+            thirdWebsiteView.isHidden = data.thirdWebsite.isEmpty   // 세 번째 웹사이트가 비어있다면 웹사이트 뷰 숨기기
+            
+            defaults.set(data.firstWebsite, forKey: "firstWebsite")   // 첫 번째 웹사이트 데이터 저장
+            defaults.set(data.secondWebsite, forKey: "secondWebsite") // 두 번째 웹사이트 데이터 저장
+            defaults.set(data.thirdWebsite, forKey: "thirdWebsite")   // 세 번째 웹사이트 데이터 저장
+            
+            // 웹사이트 값이 있으면 해당 뷰와 레이블을 보여주고, 텍스트에 밑줄 표시
+            if let firstWebsite = savedData?.firstWebsite, !firstWebsite.isEmpty {
+                firstWebsiteView.isHidden = false
+                firstWebsiteLabel.text = firstWebsite
+                firstWebsiteLabel.underline()
+            } else {
+                firstWebsiteView.isHidden = true
+            }
+            
+            if let secondWebsite = savedData?.secondWebsite, !secondWebsite.isEmpty {
+                secondWebsiteView.isHidden = false
+                secondWebsiteLabel.text = secondWebsite
+                secondWebsiteLabel.underline()
+            } else {
+                secondWebsiteView.isHidden = true
+            }
+            
+            if let thirdWebsite = savedData?.thirdWebsite, !thirdWebsite.isEmpty {
+                thirdWebsiteView.isHidden = false
+                thirdWebsiteLabel.text = thirdWebsite
+                thirdWebsiteLabel.underline()
+            } else {
+                thirdWebsiteView.isHidden = true
+            }
+            
+            // 웹사이트 값도 저장
             firstWebsiteLabel.text = data.firstWebsite
-            secondWebsiteLabel.text = data.secondWebsite   // 두 번째 웹사이트 레이블에 저장된 두 번째 웹사이트 링크 데이터 업데이트
-            thirdWebsiteLabel.text = data.thirdWebsite     // 세 번째 웹사이트 레이블에 저장된 세 번째 웹사이트 링크 데이터 업데이트
+            secondWebsiteLabel.text = data.secondWebsite
+            thirdWebsiteLabel.text = data.thirdWebsite
         }
     }
 }
